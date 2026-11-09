@@ -48,4 +48,9 @@ def main():
     print(f"built {out} ({len(html) // 1024} KB)")
 
 if __name__ == "__main__":
+    # Windows pipes default to the ANSI code page (e.g. cp949), which cannot encode
+    # characters such as "—" and crashes print(); always emit UTF-8 instead
+    for _stream in (sys.stdout, sys.stderr):
+        if hasattr(_stream, "reconfigure"):
+            _stream.reconfigure(encoding="utf-8")
     main()
